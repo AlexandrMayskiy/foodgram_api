@@ -64,7 +64,7 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
-          source: "infra/docker-compose.production.yml,infra/nginx/"
+          source: "infra/docker-compose.production.yml,infra/nginx/,data/ingredients.json,frontend/build/"
           target: "/home/ubuntu/foodgram"
           strip_components: 1
 
