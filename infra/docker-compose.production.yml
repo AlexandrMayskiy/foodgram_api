@@ -3,14 +3,14 @@ version: '3.8'
 services:
   db:
     image: postgres:15-alpine
-    env_file: .env
+    env_file: ./infra/.env
     volumes:
       - pg_data:/var/lib/postgresql/data
     restart: always
 
   backend:
-    image: AlexandrMayskiy/foodgram_backend:latest
-    env_file: .env
+    image: gubyam/foodgram_backend:latest
+    env_file: ./infra/.env
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
