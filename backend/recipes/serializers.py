@@ -34,9 +34,7 @@ class RecipeIngredientReadSerializer(serializers.ModelSerializer):
 
     id = serializers.ReadOnlyField(source="ingredient.id")
     name = serializers.ReadOnlyField(source="ingredient.name")
-    measurement_unit = serializers.ReadOnlyField(
-        source="ingredient.measurement_unit"
-    )
+    measurement_unit = serializers.ReadOnlyField(source="ingredient.measurement_unit")
 
     class Meta:
         model = RecipeIngredient
@@ -84,9 +82,7 @@ class RecipeReadSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         if request is None or request.user.is_anonymous:
             return False
-        return ShoppingCart.objects.filter(
-            user=request.user, recipe=obj
-        ).exists()
+        return ShoppingCart.objects.filter(user=request.user, recipe=obj).exists()
 
 
 class Base64ImageField(serializers.ImageField):
@@ -110,9 +106,7 @@ class RecipeIngredientWriteSerializer(serializers.Serializer):
 class RecipeWriteSerializer(serializers.ModelSerializer):
     """Сериализатор для создания и обновления рецептов (POST, PATCH)."""
 
-    tags = serializers.PrimaryKeyRelatedField(
-        queryset=Tag.objects.all(), many=True
-    )
+    tags = serializers.PrimaryKeyRelatedField(queryset=Tag.objects.all(), many=True)
     ingredients = RecipeIngredientWriteSerializer(many=True)
     image = Base64ImageField()
 
@@ -148,9 +142,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
 
     def validate_tags(self, value):
         if not value:
-            raise serializers.ValidationError(
-                "Необходимо выбрать хотя бы один тег!"
-            )
+            raise serializers.ValidationError("Необходимо выбрать хотя бы один тег!")
         return value
 
     def save_ingredients(self, recipe, ingredients_data):

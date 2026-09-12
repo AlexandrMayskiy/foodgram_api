@@ -96,13 +96,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
     )
     def shopping_cart(self, request, pk=None):
         """Добавить рецепт в список покупок или удалить из него."""
-        return self._add_or_delete_relation(
-            request, pk, ShoppingCart, "список покупок"
-        )
+        return self._add_or_delete_relation(request, pk, ShoppingCart, "список покупок")
 
-    @action(
-        detail=False, methods=["get"], permission_classes=[IsAuthenticated]
-    )
+    @action(detail=False, methods=["get"], permission_classes=[IsAuthenticated])
     def download_shopping_cart(self, request):
         """Агрегирует ингредиенты из корзины и выгружает TXT-файл."""
         user = request.user
@@ -121,8 +117,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
             )
 
         shopping_list = [
-            f"Список покупок для пользователя "
-            f"{user.get_full_name() or user.username}:\n\n"
+            (
+                f"Список покупок для пользователя "
+                f"{user.get_full_name() or user.username}:\n\n"
+            )
         ]
         for item in ingredients:
             shopping_list.append(
@@ -134,9 +132,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         response = Response(
             "".join(shopping_list), content_type="text/plain; charset=utf-8"
         )
-        response["Content-Disposition"] = (
-            'attachment; filename="shopping_list.txt"'
-        )
+        response["Content-Disposition"] = 'attachment; filename="shopping_list.txt"'
         return response
 
     def _add_or_delete_relation(self, request, pk, model, name_for_error):

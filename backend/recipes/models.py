@@ -102,9 +102,7 @@ class RecipeIngredient(models.Model):
     )
     amount = models.PositiveSmallIntegerField(
         "Количество",
-        validators=[
-            MinValueValidator(1, message="Количество должно быть не менее 1!")
-        ],
+        validators=[MinValueValidator(1, message="Количество должно быть не менее 1!")],
     )
 
     class Meta:
@@ -112,8 +110,7 @@ class RecipeIngredient(models.Model):
         verbose_name_plural = "Ингредиенты в рецепте"
         constraints = [
             models.UniqueConstraint(
-                fields=["recipe", "ingredient"],
-                name="unique_recipe_ingredient"
+                fields=["recipe", "ingredient"], name="unique_recipe_ingredient"
             )
         ]
 
@@ -130,9 +127,7 @@ class FavoriteAndCartBase(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, verbose_name="Пользователь"
     )
-    recipe = models.ForeignKey(
-        Recipe, on_delete=models.CASCADE, verbose_name="Рецепт"
-    )
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, verbose_name="Рецепт")
 
     class Meta:
         abstract = True
