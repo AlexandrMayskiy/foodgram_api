@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 from django.contrib import admin
 
 from .models import Ingredient, Recipe, RecipeIngredient, Tag
@@ -15,7 +17,7 @@ class RecipeIngredientInline(admin.TabularInline):
 class TagAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "color", "slug")
     search_fields = ("name", "slug")
-    prepopulated_fields = {"slug": ("name",)}
+    prepopulated_fields: ClassVar[dict] = {"slug": ("name",)}
 
 
 @admin.register(Ingredient)
