@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import CheckConstraint, F, Q, UniqueConstraint
@@ -17,7 +19,7 @@ class User(AbstractUser):
     )
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["username", "first_name", "last_name"]
+    REQUIRED_FIELDS: ClassVar[list] = ["username", "first_name", "last_name"]
 
     class Meta:
         verbose_name = "Пользователь"
@@ -47,7 +49,7 @@ class Follow(models.Model):
     class Meta:
         verbose_name = "Подписка"
         verbose_name_plural = "Подписки"
-        constraints = [
+        constraints: ClassVar[list] = [
             UniqueConstraint(
                 fields=["user", "author"],
                 name="unique_user_author",
