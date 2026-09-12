@@ -18,6 +18,12 @@ services:
     depends_on:
       - db
     restart: always
+  
+  frontend:
+    image: pragatall/foodgram_frontend:latest
+    volumes:
+      - frontend_value:/usr/share/nginx/html/build/
+    restart: always
 
   nginx:
     image: nginx:1.25.4-alpine
@@ -39,3 +45,4 @@ volumes:
   pg_data:
   static_value:
   media_value:
+  frontend_value:
