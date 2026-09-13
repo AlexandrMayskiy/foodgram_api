@@ -9,7 +9,7 @@ from users.views import (
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    re_path(r"^s/(??P<pk>\d+)/?$", short_link_redirect, name="short_link"),
+    re_path(r"^s/(?P<pk>\d+)/?$", short_link_redirect, name="short_link"),
     path("api/users/subscriptions/", subscriptions_list, name="subscriptions"),
     path(
         "api/users/<int:user_id>/subscribe/",
