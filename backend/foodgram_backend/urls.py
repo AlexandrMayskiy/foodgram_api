@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 from recipes.views import short_link_redirect
 from users.views import (
     subscribe_action,
@@ -9,7 +9,7 @@ from users.views import (
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("s/<int:pk>/", short_link_redirect, name="short_link"),
+    re_path(r"^s/(??P<pk>\d+)/?$", short_link_redirect, name="short_link"),
     path("api/users/subscriptions/", subscriptions_list, name="subscriptions"),
     path(
         "api/users/<int:user_id>/subscribe/",
