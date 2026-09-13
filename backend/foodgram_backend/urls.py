@@ -1,11 +1,12 @@
 from django.contrib import admin
 from django.urls import include, path
+
+from recipes.views import short_link_redirect
 from users.views import (
     subscribe_action,
     subscriptions_list,
     user_avatar_action,
 )
-from recipes.views import short_link_redirect
 
 urlpatterns = [
     path("admin/", admin.site.urls),
