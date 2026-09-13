@@ -22,7 +22,9 @@ def subscriptions_list(request):
     paginator = CustomPagination()
     result_page = paginator.paginate_queryset(authors, request)
 
-    serializer = FollowSerializer(result_page, many=True, context={"request": request})
+    serializer = FollowSerializer(
+        result_page, many=True, context={"request": request}
+    )
     return paginator.get_paginated_response(serializer.data)
 
 

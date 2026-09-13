@@ -136,7 +136,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
         response = Response(
             "".join(shopping_list), content_type="text/plain; charset=utf-8"
         )
-        response["Content-Disposition"] = 'attachment; filename="shopping_list.txt"'
+        response["Content-Disposition"] = (
+            'attachment; filename="shopping_list.txt"'
+        )
         return response
 
     def _add_or_delete_relation(self, request, pk, model, name_for_error):

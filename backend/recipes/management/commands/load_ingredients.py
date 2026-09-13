@@ -15,7 +15,9 @@ class Command(BaseCommand):
         file_path = settings.BASE_DIR / "data" / "ingredients.json"
 
         if not file_path.exists():
-            self.stdout.write(self.style.ERROR(f"Файл не найден по пути: {file_path}"))
+            self.stdout.write(
+                self.style.ERROR(f"Файл не найден по пути: {file_path}")
+            )
             return
 
         self.stdout.write("Начало загрузки ингредиентов...")
@@ -29,7 +31,9 @@ class Command(BaseCommand):
                 )
                 for item in data
             ]
-            Ingredient.objects.bulk_create(ingredients_to_create, ignore_conflicts=True)
+            Ingredient.objects.bulk_create(
+                ingredients_to_create, ignore_conflicts=True
+            )
 
         self.stdout.write(
             self.style.SUCCESS(
