@@ -5,9 +5,11 @@ from users.views import (
     subscriptions_list,
     user_avatar_action,
 )
+from recipes.views import short_link_redirect
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("s/<int:pk>/", short_link_redirect, name="short_link"),
     path("api/users/subscriptions/", subscriptions_list, name="subscriptions"),
     path(
         "api/users/<int:user_id>/subscribe/",

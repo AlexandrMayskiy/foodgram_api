@@ -103,7 +103,9 @@ class FollowSerializer(serializers.ModelSerializer):
                 recipes = recipes[: int(limit)]
             except ValueError:
                 pass
-        return RecipeShortSerializer(recipes, many=True, context=self.context).data
+        return RecipeShortSerializer(
+            recipes, many=True, context=self.context
+        ).data
 
     def get_recipes_count(self, obj):
         return obj.recipes.count()

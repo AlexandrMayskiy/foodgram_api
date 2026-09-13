@@ -1,5 +1,5 @@
 from django.db.models import Sum
-from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect, get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
@@ -96,9 +96,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
     )
     def shopping_cart(self, request, pk=None):
         """Добавить рецепт в список покупок или удалить из него."""
-        return self._add_or_delete_relation(request, pk, ShoppingCart, "список покупок")
+        return self._add_or_delete_relation(
+            request, pk, ShoppingCart, "список покупок"
+        )
 
-    @action(detail=False, methods=["get"], permission_classes=[IsAuthenticated])
+    @action(
+        detail=False, methods=["get"], permission_classes=[IsAuthenticated]
+    )
     def download_shopping_cart(self, request):
         """Агрегирует ингредиенты из корзины и выгружает TXT-файл."""
         user = request.user
@@ -159,3 +163,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 {"errors": f"Рецепта нет в вашем {name_for_error}."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+    @action(detail=True, url_path='get-link')
+    def get_link(self, request, pk=None):
+        """Возвращает короткую ссылку на рецепт."""
+        recipe = self.get_object()
+        short_link = request.build_absolute_uri(f'/s/{recipe.id}/')
+        return Response({'short-link': short_link}, status=status.HTTP_200_OK)
+
+
+def short_link_redirect(request, pk):
+    """Перенаправляет с ссылки на полную страницу рецепта."""
+    recipe = get_object_or_404(Recipe, pk=pk)
+    return redirect(f'/recipes/{recipe.id}/')
