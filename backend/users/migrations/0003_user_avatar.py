@@ -4,15 +4,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('users', '0002_follow_follow_unique_user_author_and_more'),
+        ("users", "0002_follow_follow_unique_user_author_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='avatar',
-            field=models.ImageField(blank=True, null=True, upload_to='users/avatars/', verbose_name='Аватар'),
+            model_name="user",
+            name="avatar",
+            field=models.ImageField(
+                blank=True, null=True, upload_to="users/avatars/", verbose_name="Аватар"
+            ),
         ),
     ]

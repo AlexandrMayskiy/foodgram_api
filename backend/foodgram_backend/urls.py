@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.urls import include, path, re_path
-
 from recipes.views import short_link_redirect
 
 urlpatterns = [

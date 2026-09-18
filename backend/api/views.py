@@ -4,6 +4,14 @@ from django.http import HttpResponse
 from django.urls import reverse
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet as DjoserUserViewSet
+from recipes.models import (
+    Favorite,
+    Ingredient,
+    Recipe,
+    RecipeIngredient,
+    ShoppingCart,
+    Tag,
+)
 from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
@@ -14,27 +22,19 @@ from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly,
 )
 from rest_framework.response import Response
+from users.models import Follow
 
 from api.filters import RecipeFilter
 from api.pagination import Pagination
 from api.serializers import (
-    UserSerializer,
     FollowSerializer,
     IngredientSerializer,
     RecipeReadSerializer,
     RecipeShortSerializer,
     RecipeWriteSerializer,
     TagSerializer,
+    UserSerializer,
 )
-from recipes.models import (
-    Favorite,
-    Ingredient,
-    Recipe,
-    RecipeIngredient,
-    ShoppingCart,
-    Tag,
-)
-from users.models import Follow
 
 User = get_user_model()
 
@@ -47,9 +47,7 @@ class CustomUserViewSet(DjoserUserViewSet):
     pagination_class = Pagination
 
     @action(
-        detail=False,
-        permission_classes=(IsAuthenticated,),
-        url_path="subscriptions"
+        detail=False, permission_classes=(IsAuthenticated,), url_path="subscriptions"
     )
     def subscriptions(self, request):
         """Возвращает авторов, на которых подписан пользователь."""
@@ -59,9 +57,7 @@ class CustomUserViewSet(DjoserUserViewSet):
 
         paginated_queryset = self.paginate_queryset(authors)
         serializer = FollowSerializer(
-            paginated_queryset,
-            many=True,
-            context={"request": request}
+            paginated_queryset, many=True, context={"request": request}
         )
         return self.get_paginated_response(serializer.data)
 
@@ -69,7 +65,7 @@ class CustomUserViewSet(DjoserUserViewSet):
         detail=True,
         methods=("post", "delete"),
         permission_classes=(IsAuthenticated,),
-        url_path="subscribe"
+        url_path="subscribe",
     )
     def subscribe(self, request, id=None):
         """Создать подписку или удалить её."""
@@ -98,7 +94,7 @@ class CustomUserViewSet(DjoserUserViewSet):
         detail=False,
         methods=("put", "delete"),
         permission_classes=(IsAuthenticated,),
-        url_path="me/avatar"
+        url_path="me/avatar",
     )
     def avatar(self, request):
         """Управление аватаром текущего пользователя."""
@@ -116,9 +112,7 @@ class CustomUserViewSet(DjoserUserViewSet):
             )
             serializer.is_valid(raise_exception=True)
             serializer.save()
-            return Response(
-                {"avatar": user.avatar.url}, status=status.HTTP_200_OK
-            )
+            return Response({"avatar": user.avatar.url}, status=status.HTTP_200_OK)
 
         if request.method == "DELETE":
             if user.avatar:
@@ -219,12 +213,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
             f"{user.get_full_name() or user.username}:\n\n"
         )
         file_content = header + "".join(shopping_list)
-        response = HttpResponse(
-            file_content,
-            content_type="text/plain; charset=utf-8"
-        )
-        response["Content-Disposition"] = (
-            'attachment; filename="shopping_list.txt"')
+        response = HttpResponse(file_content, content_type="text/plain; charset=utf-8")
+        response["Content-Disposition"] = 'attachment; filename="shopping_list.txt"'
         return response
 
     def _add_or_delete_relation(self, request, pk, model):
@@ -239,9 +229,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 raise ValidationError("Рецепт уже добавлен!")
 
             model.objects.create(user=user, recipe=recipe)
-            serializer = RecipeShortSerializer(
-                recipe, context={"request": request}
-            )
+            serializer = RecipeShortSerializer(recipe, context={"request": request})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         if request.method == "DELETE":
@@ -250,11 +238,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             relation.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(
-        detail=True,
-        methods=("get",),
-        url_path="get-link"
-    )
+    @action(detail=True, methods=("get",), url_path="get-link")
     def get_link(self, request, pk=None):
         """Возвращает короткую ссылку на рецепт."""
 
