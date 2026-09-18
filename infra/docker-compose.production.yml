@@ -7,7 +7,7 @@ services:
     restart: always
 
   backend:
-    image: gubyam/foodgram_backend:latest
+    build: ../backend/
     env_file: ./infra/.env
     volumes:
       - static_value:/app/static/
