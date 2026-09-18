@@ -2,14 +2,15 @@
 
 import django.core.validators
 from django.db import migrations, models
+from typing import ClassVar
 
 
 class Migration(migrations.Migration):
-    dependencies = [
+    dependencies: ClassVar[list] = [
         ("recipes", "0002_shoppingcart_favorite_and_more"),
     ]
 
-    operations = [
+    operations: ClassVar[list] = [
         migrations.AlterField(
             model_name="recipe",
             name="cooking_time",
