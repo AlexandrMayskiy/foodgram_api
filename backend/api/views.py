@@ -13,7 +13,7 @@ from recipes.models import (
     Tag,
 )
 from rest_framework import filters, status, viewsets
-from rest_framework.decorators import action
+from rest_framework.decorators import action, renderer_classes
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import (
     SAFE_METHODS,
@@ -48,7 +48,8 @@ class CustomUserViewSet(DjoserUserViewSet):
     pagination_class = Pagination
 
     @action(
-        detail=False, permission_classes=(IsAuthenticated,), url_path="subscriptions"
+        detail=False, permission_classes=(IsAuthenticated,),
+        url_path="subscriptions"
     )
     def subscriptions(self, request):
         """Возвращает авторов, на которых подписан пользователь."""
