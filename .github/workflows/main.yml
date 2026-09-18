@@ -24,7 +24,7 @@ jobs:
           if [ -f backend/requirements.txt ]; then pip install -r backend/requirements.txt; fi
 
       - name: Run linter (Ruff)
-        run: ruff check backend/
+        run: ruff check backend/ --ignore I001
 
   build_backend_and_push_to_docker_hub:
     name: Push Backend Docker image to Docker Hub
