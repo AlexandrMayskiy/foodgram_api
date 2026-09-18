@@ -114,7 +114,10 @@ class CustomUserViewSet(DjoserUserViewSet):
             )
             serializer.is_valid(raise_exception=True)
             serializer.save()
-            return Response({"avatar": user.avatar.url}, status=status.HTTP_200_OK)
+            return Response(
+                {"avatar": user.avatar.url},
+                status=status.HTTP_200_OK
+            )
 
         if request.method == "DELETE":
             if user.avatar:
@@ -216,8 +219,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
             f"{user.get_full_name() or user.username}:\n\n"
         )
         file_content = header + "".join(shopping_list)
-        response = HttpResponse(file_content, content_type="text/plain; charset=utf-8")
-        response["Content-Disposition"] = 'attachment; filename="shopping_list.txt"'
+        response = HttpResponse(
+            file_content, content_type="text/plain; charset=utf-8"
+        )
+        response["Content-Disposition"] = (
+            'attachment; filename="shopping_list.txt"'
+        )
         return response
 
     def _add_or_delete_relation(self, request, pk, model):
@@ -232,7 +239,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 raise ValidationError("Рецепт уже добавлен!")
 
             model.objects.create(user=user, recipe=recipe)
-            serializer = RecipeShortSerializer(recipe, context={"request": request})
+            serializer = RecipeShortSerializer(
+                recipe, context={"request": request}
+            )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         if request.method == "DELETE":

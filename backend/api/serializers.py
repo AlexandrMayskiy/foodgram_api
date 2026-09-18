@@ -132,7 +132,9 @@ class RecipeReadSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         if request is None or request.user.is_anonymous:
             return False
-        return ShoppingCart.objects.filter(user=request.user, recipe=obj).exists()
+        return ShoppingCart.objects.filter(
+            user=request.user, recipe=obj
+        ).exists()
 
 
 class RecipeIngredientWriteSerializer(serializers.Serializer):
@@ -156,7 +158,9 @@ class RecipeIngredientWriteSerializer(serializers.Serializer):
 class RecipeWriteSerializer(serializers.ModelSerializer):
     """Сериализатор для создания и обновления рецептов (POST, PATCH)."""
 
-    tags = serializers.PrimaryKeyRelatedField(queryset=Tag.objects.all(), many=True)
+    tags = serializers.PrimaryKeyRelatedField(
+        queryset=Tag.objects.all(), many=True
+    )
     ingredients = RecipeIngredientWriteSerializer(many=True)
     image = Base64ImageField()
 
@@ -186,7 +190,9 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
 
     def validate_tags(self, value):
         if not value:
-            raise serializers.ValidationError("Необходимо выбрать хотя бы один тег!")
+            raise serializers.ValidationError(
+                "Необходимо выбрать хотя бы один тег!"
+            )
         return value
 
     def save_ingredients(self, recipe, ingredients_data):
@@ -269,9 +275,13 @@ class FollowSerializer(UserSerializer):
         author = self.context.get("author")
 
         if user == author:
-            raise serializers.ValidationError("Нельзя подписаться на самого себя!")
+            raise serializers.ValidationError(
+                "Нельзя подписаться на самого себя!"
+            )
         if Follow.objects.filter(user=user, author=author).exists():
-            raise serializers.ValidationError("Вы уже подписаны на этого автора!")
+            raise serializers.ValidationError(
+                "Вы уже подписаны на этого автора!"
+            )
         return data
 
     def get_recipes(self, obj):
@@ -282,7 +292,9 @@ class FollowSerializer(UserSerializer):
         if limit and limit.isdigit():
             recipes = recipes[: int(limit)]
 
-        return RecipeShortSerializer(recipes, many=True, context=self.context).data
+        return RecipeShortSerializer(
+            recipes, many=True, context=self.context
+        ).data
 
     def get_recipes_count(self, obj):
         return obj.recipes.count()
