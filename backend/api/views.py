@@ -21,6 +21,7 @@ from rest_framework.permissions import (
     IsAuthenticated,
     IsAuthenticatedOrReadOnly,
 )
+from rest_framework.renderers import BaseRenderer
 from rest_framework.response import Response
 from users.models import Follow
 
@@ -186,6 +187,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         methods=("get",),
         permission_classes=(IsAuthenticated,),
     )
+    @renderer_classes([BaseRenderer])
     def download_shopping_cart(self, request):
         """Агрегирует ингредиенты из корзины и выгружает TXT-файл."""
 
