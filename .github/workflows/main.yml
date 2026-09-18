@@ -79,7 +79,7 @@ jobs:
           target: "/home/ubuntu/foodgram"
           strip_components: 0
 
-        - name: Executing remote ssh commands to deploy
+      - name: Executing remote ssh commands to deploy
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
