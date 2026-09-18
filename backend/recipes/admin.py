@@ -2,7 +2,9 @@ from typing import ClassVar
 
 from django.contrib import admin
 
-from .models import Ingredient, Recipe, RecipeIngredient, Tag
+from .models import (
+    Favorite, Ingredient, Recipe, RecipeIngredient, ShoppingCart, Tag
+)
 
 
 class RecipeIngredientInline(admin.TabularInline):
@@ -43,6 +45,25 @@ class RecipeAdmin(admin.ModelAdmin):
 
     def get_favorites_count(self, obj):
         """Выводит общее число добавлений этого рецепта в избранное."""
+
         return obj.favorites.count()
 
     get_favorites_count.short_description = "В избранном (раз)"
+
+
+@admin.register(RecipeIngredient)
+class RecipeIngredientAdmin(admin.ModelAdmin):
+    list_display = ("id", "recipe", "ingredient", "amount")
+    search_fields = ("recipe__name", "ingredient__name")
+
+
+@admin.register(Favorite)
+class FavoriteAdmin(admin.ModelAdmin):
+    list_display = ("id", "user", "recipe")
+    search_fields = ("user__username", "recipe__name")
+
+
+@admin.register(ShoppingCart)
+class ShoppingCartAdmin(admin.ModelAdmin):
+    list_display = ("id", "user", "recipe")
+    search_fields = ("user__username", "recipe__name")

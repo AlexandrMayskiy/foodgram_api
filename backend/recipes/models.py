@@ -1,7 +1,7 @@
 from typing import ClassVar
 
 from django.contrib.auth import get_user_model
-from django.core.validators import MinValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 User = get_user_model()
@@ -33,12 +33,12 @@ class Ingredient(models.Model):
         verbose_name = "Ингредиент"
         verbose_name_plural = "Ингредиенты"
         ordering = ("name",)
-        constraints: ClassVar[list] = [
+        constraints: ClassVar[tuple] = (
             models.UniqueConstraint(
-                fields=["name", "measurement_unit"],
+                fields=("name", "measurement_unit"),
                 name="unique_ingredient_unit",
-            )
-        ]
+            ),
+        )
 
     def __str__(self):
         return f"{self.name}, {self.measurement_unit}"
@@ -70,11 +70,14 @@ class Recipe(models.Model):
     )
     cooking_time = models.PositiveSmallIntegerField(
         "Время приготовления (в минутах)",
-        validators=[
+        validators=(
             MinValueValidator(
                 1, message="Время приготовления должно быть не менее 1 минуты!"
-            )
-        ],
+            ),
+            MaxValueValidator(
+                1440, message="Время приготовления не может превышать сутки!"
+            ),
+        ),
     )
     pub_date = models.DateTimeField("Дата публикации", auto_now_add=True)
 
@@ -104,20 +107,25 @@ class RecipeIngredient(models.Model):
     )
     amount = models.PositiveSmallIntegerField(
         "Количество",
-        validators=[MinValueValidator(
-            1, message="Количество должно быть не менее 1!"
-        )],
+        validators=(
+            MinValueValidator(
+                1, message="Количество должно быть не менее 1!"
+            ),
+            MaxValueValidator(
+                10000, message="Количество слишком велико!"
+            ),
+        ),
     )
 
     class Meta:
         verbose_name = "Ингредиент в рецепте"
         verbose_name_plural = "Ингредиенты в рецепте"
-        constraints: ClassVar[list] = [
+        constraints: ClassVar[tuple] = (
             models.UniqueConstraint(
-                fields=["recipe", "ingredient"],
+                fields=("recipe", "ingredient"),
                 name="unique_recipe_ingredient"
-            )
-        ]
+            ),
+        )
 
     def __str__(self):
         return (
@@ -150,11 +158,11 @@ class Favorite(FavoriteAndCartBase):
         verbose_name = "Избранное"
         verbose_name_plural = "Избранное"
         default_related_name = "favorites"
-        constraints: ClassVar[list] = [
+        constraints: ClassVar[tuple] = (
             models.UniqueConstraint(
-                fields=["user", "recipe"], name="unique_favorite_recipe"
-            )
-        ]
+                fields=("user", "recipe"), name="unique_favorite_recipe"
+            ),
+        )
 
 
 class ShoppingCart(FavoriteAndCartBase):
@@ -164,8 +172,8 @@ class ShoppingCart(FavoriteAndCartBase):
         verbose_name = "Список покупок"
         verbose_name_plural = "Список покупок"
         default_related_name = "shopping_cart"
-        constraints: ClassVar[list] = [
+        constraints: ClassVar[tuple] = (
             models.UniqueConstraint(
-                fields=["user", "recipe"], name="unique_shopping_cart_recipe"
-            )
-        ]
+                fields=("user", "recipe"), name="unique_shopping_cart_recipe"
+            ),
+        )

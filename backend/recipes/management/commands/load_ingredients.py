@@ -22,21 +22,22 @@ class Command(BaseCommand):
 
         self.stdout.write("Начало загрузки ингредиентов...")
 
-        with open(file_path, "r", encoding="utf-8") as f:
-            data = json.load(f)
+        with open(file_path, "r", encoding="utf-8") as json_file:
+            data = json.load(json_file)
             ingredients_to_create = [
                 Ingredient(
-                    name=item["name"],
-                    measurement_unit=item["measurement_unit"],
+                    name=ingredient_data["name"],
+                    measurement_unit=ingredient_data["measurement_unit"],
                 )
-                for item in data
+                for ingredient_data in data
             ]
             Ingredient.objects.bulk_create(
                 ingredients_to_create, ignore_conflicts=True
             )
 
+        ingredients_count = Ingredient.objects.count()
         self.stdout.write(
             self.style.SUCCESS(
-                f"Успешно загружено ингредиентов: {Ingredient.objects.count()}"
+                f"Успешно загружено ингредиентов: {ingredients_count}"
             )
         )

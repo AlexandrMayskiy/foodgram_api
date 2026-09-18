@@ -1,7 +1,7 @@
 from rest_framework.pagination import PageNumberPagination
 
 
-class CustomPagination(PageNumberPagination):
+class Pagination(PageNumberPagination):
     """Пагинатор с настраиваемым размером страницы через параметр limit."""
 
     page_size_query_param = "limit"

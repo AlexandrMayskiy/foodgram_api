@@ -8,7 +8,7 @@ User = get_user_model()
 
 
 @admin.register(User)
-class CustomUserAdmin(UserAdmin):
+class UserAdmin(UserAdmin):
     """Настройка отображения кастомных пользователей в админке."""
 
     list_display = (
