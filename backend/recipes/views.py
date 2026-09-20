@@ -5,6 +5,5 @@ from .models import Recipe
 
 def short_link_redirect(request, pk):
     """Перенаправляет с короткой ссылки на полную страницу рецепта."""
-
     recipe = get_object_or_404(Recipe, pk=pk)
-    return redirect(f"/recipes/{recipe.id}/")
+    return redirect("api:recipes-detail", pk=recipe.id)

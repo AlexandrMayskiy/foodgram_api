@@ -30,3 +30,9 @@ class RecipeFilter(filters.FilterSet):
         if value and user.is_authenticated:
             return queryset.filter(shopping_cart__user=user)
         return queryset
+
+
+class IngredientSearchFilter(filters.SearchFilter):
+    """Кастомный фильм поиска ингредиентов по названию."""
+
+    search_param = "name"

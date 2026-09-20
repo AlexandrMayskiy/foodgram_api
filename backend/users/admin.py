@@ -20,7 +20,7 @@ class UserAdmin(UserAdmin):
         "is_staff",
     )
     search_fields = ("username", "email", "first_name", "last_name")
-    list_filter = ("email", "username", "is_staff", "is_active")
+    list_filter = ("username", "email", "is_staff", "is_active")
     ordering = ("id",)
 
 
